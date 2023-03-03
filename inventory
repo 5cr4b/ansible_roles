@@ -1,0 +1,8 @@
+[mongodb]
+worker1.com
+worker2.com
+worker3.com
+
+[master]
+worker1.com
+

@@ -1,0 +1,56 @@
+---
+vars_file:
+
+vars:
+  unmout: {}
+
+- name: Unmount 
+  mount:
+    path: "{{ disk mounted }}" 
+    state: absent
+  become: true
+  notify:
+    - Stop Mongodb
+  when: umount == "true"
+  tags:
+  - remove
+  - unmount
+
+- name: Remove Mongodb
+  apt:
+    name: mongodb-org*
+    state: absent
+  become: true
+  tags:
+  - remove
+
+- name: Remove Mongodb Log Folder
+  file:
+    path: /var/log/mongodb
+    state: absent
+  become: true
+  tags:
+  - remove
+
+- name: Remove Data Folder
+  file: 
+    path: "{{ mount_point }}"
+    state: absent
+  become: true
+  tags: 
+  - remove
+
+- name: Remove Mongodb repository
+    path: "{{ mongodb_repo }}"
+    state: absent
+  become: true
+  tags: 
+  - remove
+
+- name: apt update
+  apt:
+    update-cache: no
+    allow_unauthenticated: yes
+  become: true    
+  tags:
+  - remove    

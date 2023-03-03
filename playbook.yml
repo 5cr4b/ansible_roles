@@ -1,0 +1,15 @@
+---
+
+  host: mongodb
+  become: true
+  vars:
+    repli: {}
+  roles:
+    # Mounted disk first
+    #- name: Mounted disk
+    #  ansible.builtin.inclue_role:
+    - mounted_disk   
+    #- name: Install mongodb
+    #  absible.builtin.inclue_role:
+    - mongodb_install
+      

@@ -1,0 +1,36 @@
+---
+- vars_file:
+    ../vars/main.yml
+  vars: 
+    parttion: true
+    mount_point: true
+  
+  # First install general module
+  # ansible-galaxy collection install community.general
+
+  # Partion A Extra Disk 
+  - name: Create Partition
+    community.general.parted:
+      device: "{{ dev_name }}"
+      number: "{{ partition_number }}"
+      state: present
+    register: _mounted_disk_number
+    become: true
+  
+  # Format Parrtion
+  - name: Format Partition
+    community.general.filesystem:
+      dev: "{{ dev_name }}"
+      state: present
+    become: true
+  
+  # Install galaxy ansible mount.posix module
+  # ansible-galaxy collection install ansible.posix
+  # Mount Point
+  - name: Mount Point
+    community.general.mount:
+      path: "{{ mounted_point }}"
+      src: "{{ partition }}"
+      fstype: "{{ fstype }}"
+      state: mounted
+    become: true

@@ -1,0 +1,7 @@
+---
+# vars file for mounted_disk
+dev_name: {}
+fstype: {}
+partition_number: {}
+mount_point: {}
+partition: {}
