@@ -100,13 +100,21 @@
   - folder
 
 # If reply Is True
+- name: Install dependencies
+  ansible.builtin.inclue_tasks:
+    name: install_dependencies.yml
+  when: repli
+  become: true
+  tags:
+  - replicaset
+
 - name: If Replicaset is True
-  ansible.builtin.inclue_task:
+  ansible.builtin.inclue_tasks:
     name: init_replicaset
   when: repli 
   tags:
   - replicaset
-    
+
   
 
   

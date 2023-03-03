@@ -1,7 +1,8 @@
 ---
 # vars file for mounted_disk
-dev_name: {}
+dev_name: /dev/{{ name_partion }}
 fstype: {}
 partition_number: {}
+device_partition: {{dev_name}}{{partition_number}}
 mount_point: {}
 partition: {}

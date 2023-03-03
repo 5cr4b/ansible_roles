@@ -16,14 +16,6 @@ host: master
     tags:
     - replicaset
 
-  - name: Install Dependencies
-    ansible.builtin.inclue_task:
-      name: install_dependencies
-    register: _depend
-    become: true
-    when: repli
-    tags:
-    - replicaset
 
   # Install ansible galaxy first 
   # ansible-galaxy collection install community.mongodb

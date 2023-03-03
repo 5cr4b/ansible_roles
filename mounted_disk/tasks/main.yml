@@ -11,26 +11,51 @@
   # Partion A Extra Disk 
   - name: Create Partition
     community.general.parted:
-      device: "{{ dev_name }}"
-      number: "{{ partition_number }}"
-      state: present
-    register: _mounted_disk_number
+      align: '{{ item.align | default(omit) }}'
+      device: '{{ item.device }}'
+      flags: '{{ item.flags | default(omit) }}'
+      fs_type: '{{ item.fs_type | default(omit) }}'
+      label: '{{ item.label | default("gpt") }}'
+      name: '{{ item.name | default(omit) }}'
+      number: '{{ item.number | default(omit) }}'
+      part_end: '{{ item.part_end | default(omit) }}'
+      part_start: '{{ item.part_start | default(omit) }}'
+      part_type: '{{ item.part_type | default(omit) }}'
+      resize: '{{ item.resize | default(omit) }}'
+      state: '{{ item.state | default(omit) }}'
+      unit: '{{ item.unit | default(omit) }}'
     become: true
+    tags:
+    - mount
   
   # Format Parrtion
   - name: Format Partition
     community.general.filesystem:
-      dev: "{{ dev_name }}"
-      state: present
+      dev: '{{ item.dev }}'
+      force: '{{ item.force | default(omit) }}'
+      fstype: '{{ item.fstype }}'
+      opts: '{{ item.opts | default(omit) }}'
+      resizefs: '{{ item.resizefs | default(omit) }}'
+      state: '{{ item.state | default(omit) }}'
     become: true
-  
+    tags:
+    - mount
+    
   # Install galaxy ansible mount.posix module
   # ansible-galaxy collection install ansible.posix
   # Mount Point
   - name: Mount Point
     community.general.mount:
-      path: "{{ mounted_point }}"
-      src: "{{ partition }}"
-      fstype: "{{ fstype }}"
-      state: mounted
+      backup: '{{ item.backup | default(omit) }}'
+      boot: '{{ item.boot | default(omit) }}'
+      dump: '{{ item.dump | default(omit) }}'
+      fstab: '{{ item.fstab | default(omit) }}'
+      fstype: '{{ item.fstype }}'
+      opts: '{{ item.opts | default("defaults") }}'
+      passno: '{{ item.passno | default(omit) }}'
+      path: '{{ item.path }}'
+      src: '{{ item.src }}'
+      state: '{{ item.state | default("mounted") }}'
     become: true
+    tags:
+    - mount
