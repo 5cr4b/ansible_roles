@@ -35,7 +35,9 @@ host: master
       #login_password: "{{ login_passwd }}"
       validate: true
       members:
-      
+      - worker1.com:27017
+      - worker2.com:27017
+      - worker3.com:27017 
     become: true
     when: repli
     tags:
