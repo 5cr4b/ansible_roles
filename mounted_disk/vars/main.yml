@@ -1,8 +1,16 @@
 ---
 # vars file for mounted_disk
-dev_name: /dev/{{ name_partion }}
-fstype: {}
-partition_number: {}
-device_partition: {{dev_name}}{{partition_number}}
-mount_point: {}
-partition: {}
+
+
+mount_point: " /data/mongodb "
+
+parted: {number: 1, device: '/dev/sdb', fs_type: 'ext4', state: 'present'}
+
+dev: "{{ parted['device'] }}{{ parted['number'] }}"
+filesystem: { dev: "{{ dev }}", fstype: ext4}
+
+mount: {fstype: ext4, path: "{{ mount_point }}", src: "{{ dev }}", state: mounted}
+
+
+
+

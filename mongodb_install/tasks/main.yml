@@ -1,30 +1,24 @@
 ---
 # tasks file for mongodb_install
-- vars_files:
-    ../vars/main.yml
-  vars:
-    repli: true
-   #repli: "{{  x }}"
 
 - name: Import list file for Mongodb
   template:
     src: mongodb_repo.list.j2
     dest: "{{ mongodb_key_store }}"
-    owner: "{{ mongodb_user }}"
-    group: "{{ mongodb_group }}"
+    #owner: "{{ mongodb_user }}"
+    #group: "{{ mongodb_group }}"
   tags:
   - install
   - apt
 
 - name: Import Mongodb key
   ansible.builtin.apt_key:
-    url: "{{ mongodb_key }}"
+    url: "{{ mongodb_repo }}"
     state: present
     # ignore SSL cert for target url
     validate_certs: false
     # store keyfile
     #file: "{{ mongodb_key_store }}"
-    register: _mongodb_key
   become: true
   tags:
   - install
@@ -32,7 +26,8 @@
 
 - name: Update package
   ansible.builtin.apt:
-    apdate-cache: no 
+    update_cache: no
+    upgrade: yes
     state: present
   become: true
   tags:
@@ -71,6 +66,7 @@
     backup: true
   register: _copy
   become: true
+  tags:
   - install
   - mount
   - folder
@@ -101,22 +97,21 @@
 
 # If reply Is True
 - name: Install dependencies
-  ansible.builtin.inclue_tasks:
-    name: install_dependencies.yml
+  ansible.builtin.include_tasks:
+    file: install_dependencies.yml
   when: repli
-  become: true
   tags:
   - replicaset
 
 - name: If Replicaset is True
-  ansible.builtin.inclue_tasks:
-    name: init_replicaset
+  ansible.builtin.include_tasks:
+    file: init_replicaset
   when: repli 
   tags:
   - replicaset
 
-  
 
-  
 
- 
+
+
+

@@ -1,8 +1,8 @@
 [mongodb]
-worker1.com
-worker2.com
-worker3.com
+worker1
+worker2
+worker3
 
 [master]
-worker1.com
+worker1
 

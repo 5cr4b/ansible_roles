@@ -3,7 +3,7 @@
 mongodb_version: "6.0"
 file_storage: /etc/apt/sources.list.d
 mongodb_key: server-{{ mongodb_version }}.asc
-mongodb_key_store: /etc/apt/sources.list.d/mongodb-{{ mongodb-version }}.list
+mongodb_key_store: /etc/apt/sources.list.d/mongodb-{{ mongodb_version }}.list
 mongodb_repo: https://www.mongodb.org/static/pgp/{{ mongodb_key }}
 mongodb_user: mongodb
 mongodb_group: mongodb

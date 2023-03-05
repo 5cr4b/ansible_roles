@@ -1,21 +1,21 @@
 ---
 # install dependencies for replicaset
-    - name: Install pip3
-      apt:
-        name: python3-pip
-        state: present
-      become: true
-      tags:
-      - depend
+- name: Install pip3
+  apt:
+    name: python3-pip
+    state: present
+  become: true
+  tags:
+  - depend
 
-    - name: Install Set Up Tool
-      apt:
-        name: python-setuptools
-        state: present
-      become: true
-      - depend
+- name: Install Set Up Tool
+  apt:
+    name: python-setuptools
+    state: present
+  become: true
+  - depend
 
-    - name: Install pymongo
-      pip:
-        name: pymongo
-      tags: depend
+- name: Install pymongo
+  pip:
+    name: pymongo
+  tags: depend

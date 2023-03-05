@@ -1,36 +1,36 @@
-host: master
-  - name: Enable Replicaset Config File
-    template:
-      src: mongod.conf.j2
-      dest: "{{ mongodb_conf_path }}"
-      owner: "{{ mongodb_user }}"
-      group: "{{ mongodb_group }}"
-    register: _init_repli
-    become: true
-    notify:
-      - Stop Mongodb
-    when: repli
-    # Set the ENV Host Ip for Mongodb Replicaset File
-    #enviroment: 
-    # HOST_IP = 
-    tags:
-    - replicaset
+
+- name: Enable Replicaset Config File
+  template:
+    src: mongod.conf.j2
+    dest: "{{ mongodb_conf_path }}"
+    owner: "{{ mongodb_user }}"
+    group: "{{ mongodb_group }}"
+  register: _init_repli
+  become: true
+  notify:
+    - Stop Mongodb
+  when: repli
+  # Set the ENV Host Ip for Mongodb Replicaset File
+  #enviroment: 
+  # HOST_IP = 
+  tags:
+  - replicaset
 
 
-  # Install ansible galaxy first 
-  # ansible-galaxy collection install community.mongodb
-  - name: Init Replicaset
-    community.mongodb.mongodb_replicaset:
-      replica_set: "{{ replicaset_name }}"
-      login_port: "{{ mongodb_port }}"
-      login_user: " {{ mongo_user }}"
-      #login_password: "{{ login_passwd }}"
-      validate: true
-      members:
-      - worker1.com:27017
-      - worker2.com:27017
-      - worker3.com:27017 
-    become: true
-    when: repli
-    tags:
-    - replicaset
+# Install ansible galaxy first 
+# ansible-galaxy collection install community.mongodb
+- name: Init Replicaset
+  community.mongodb.mongodb_replicaset:
+    replica_set: "{{ replicaset_name }}"
+    login_port: "{{ mongodb_port }}"
+    login_user: " {{ mongo_user }}"
+    #login_password: "{{ login_passwd }}"
+    validate: true
+    members:
+    - worker1.com:27017
+    - worker2.com:27017
+    - worker3.com:27017 
+  become: true
+  when: repli
+  tags:
+  - replicaset
