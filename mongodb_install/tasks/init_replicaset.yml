@@ -13,6 +13,13 @@
   tags:
   - replicaset
 
+- name: Restart Mongodb
+  service: 
+    name: mongod
+    state: restarted
+  become: true
+  tags:
+    - mongodb_restart
 
 # Install ansible galaxy first 
 # ansible-galaxy collection install community.mongodb
@@ -25,9 +32,9 @@
     login_password: "{{ mongodb_passwd }}"
     validate: true
     members: 
-    - 192.168.60.158:27017
-    - 192.168.60.159:27017
-    - 192.168.60.154:27017 
+    - worker1:27017
+    - worker2:27017
+    - worker3:27017 
   when: inventory_hostname in groups['master'] and repli
   become: true
   tags:
