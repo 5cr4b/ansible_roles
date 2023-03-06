@@ -1,18 +1,15 @@
+--- 
 
 - name: Enable Replicaset Config File
   template:
     src: mongod.conf.j2
-    dest: "{{ mongodb_conf_path }}"
+    dest: "{{ mongodb_conf_path }}/mongod.conf"
     owner: "{{ mongodb_user }}"
     group: "{{ mongodb_group }}"
-  register: _init_repli
   become: true
-  notify:
-    - Stop Mongodb
+  #notify:
+  #  - Stop Mongodb
   when: repli
-  # Set the ENV Host Ip for Mongodb Replicaset File
-  #enviroment: 
-  # HOST_IP = 
   tags:
   - replicaset
 
@@ -20,17 +17,19 @@
 # Install ansible galaxy first 
 # ansible-galaxy collection install community.mongodb
 - name: Init Replicaset
+  #shell: mongosh  < rsInit.j2
   community.mongodb.mongodb_replicaset:
     replica_set: "{{ replicaset_name }}"
     login_port: "{{ mongodb_port }}"
-    login_user: " {{ mongo_user }}"
-    #login_password: "{{ login_passwd }}"
+    login_user: " {{ mongodb_user }}"
+    login_password: "{{ mongodb_passwd }}"
     validate: true
-    members:
-    - worker1.com:27017
-    - worker2.com:27017
-    - worker3.com:27017 
+    members: 
+    - 192.168.60.158:27017
+    - 192.168.60.159:27017
+    - 192.168.60.154:27017 
+  when: inventory_hostname in groups['master'] and repli
   become: true
-  when: repli
   tags:
   - replicaset
+  

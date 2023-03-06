@@ -13,6 +13,7 @@
     name: python-setuptools
     state: present
   become: true
+  tags:
   - depend
 
 - name: Install pymongo

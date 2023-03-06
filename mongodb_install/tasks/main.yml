@@ -26,7 +26,7 @@
 
 - name: Update package
   ansible.builtin.apt:
-    update_cache: no
+    update_cache: yes
     upgrade: yes
     state: present
   become: true
@@ -39,8 +39,6 @@
     name: mongodb-org
     state: present
   become: true 
-  notify:
-    - Stop mongodb
   tags:
   - apt
   - install
@@ -49,7 +47,7 @@
 - name: Create New Folder to Store Data
   ansible.builtin.file:
     path: "{{ mount_point }}"
-    state: dictionary
+    state: directory
     owner: "{{ mongodb_user }}"
     group: "{{ mongodb_group }}"
   become: true
@@ -58,24 +56,31 @@
   - mount
   - folder
 
-- name: Copy Default Folder
-  ansible.builtin.copy:
-    remote_src: true 
-    src: "{{ mongodb_default_folder }}/"
-    dest: "{{ mount_point }}"
-    backup: true
-  register: _copy
-  become: true
-  tags:
-  - install
-  - mount
-  - folder
+#- name: Restart Mongodb
+#  service: 
+#    name: mongod
+#    state: restarted
+#  become: true
+#  tags:
+#    - mongodb_restart
+
+#- name: Copy Default Folder
+#  ansible.builtin.copy:
+#    remote_src: true 
+#    src: "{{ mongodb_default_folder }}"
+#    dest: "{{ mount_point }}"
+#    backup: true
+#  register: _copy
+#  become: true
+#  tags:
+#  - install
+#  - mount
+#  - folder
 
 - name: Delete Default Folder
   ansible.builtin.file:
     path: "{{ mongodb_default_folder }}"
     state: absent
-  register: _del
   become: true
   tags:
   - install
@@ -84,16 +89,24 @@
 - name: Create Soft Link 
   ansible.builtin.file:
     src: "{{ mount_point }}"
-    path: " {{ mongodb_default folder }}"
+    dest: "{{ mongodb_default_folder }}"
     state: link
     owner: "{{ mongodb_user }}"
     group: "{{ mongodb_group }}"
   become: true
-  notify: 
-    - Restart Mongodb
+  #notify: 
+  #  - Restart Mongodb
   tags:
   - install
   - folder
+
+- name: Restart Mongodb
+  service: 
+    name: mongod
+    state: restarted
+  become: true
+  tags:
+    - mongodb_restart
 
 # If reply Is True
 - name: Install dependencies
@@ -103,11 +116,11 @@
   tags:
   - replicaset
 
-- name: If Replicaset is True
+- name: Init Replicaset
   ansible.builtin.include_tasks:
-    file: init_replicaset
+    file: init_replicaset.yml
   when: repli 
-  tags:
+  tags: 
   - replicaset
 
 
