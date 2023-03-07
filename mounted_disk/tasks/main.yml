@@ -14,22 +14,18 @@
 - name: Create Partition
   community.general.parted:
     #align: '{{ item.align | default(omit) }}'
-    #device: '{{ item.device }}'
-    device: /dev/sdb
+    device: "{{ parted['device']}}"
     #flags: '{{ item.flags | default(omit) }}'
     #fs_type: '{{ item.fs_type | default(omit) }}'
-    #fs_type: ext4
+    fs_type: "{{ parted['fs_type']}}"
     #label: '{{ item.label | default("gpt") }}'
     #name: '{{ parted.name | default(omit) }}'
-    #name: sdb
-    number : 1 
-    #number: '{{ item.number | default(omit) }}'
+    number : "{{ parted['number']}}"
     #part_end: '{{ item.part_end | default(omit) }}'
     #part_start: '{{ item.part_start | default(omit) }}'
     #part_type: '{{ item.part_type | default(omit) }}'
     #resize: '{{ item.resize | default(omit) }}'
-    state: present
-    #state: '{{ item.state | default(omit) }}'
+    state: "{{ parted['state']}}"
     #unit: '{{ item.unit | default(omit) }}'
   #with_items: "{{ parted }}"
   become: true
@@ -39,11 +35,9 @@
 # Format Parrtion
 - name: Format Partition
   community.general.filesystem:
-    #dev: '{{ item.dev }}'
-    dev: /dev/sdb1
+    dev: "{{ filesystem['dev'] }}"
     #force: '{{ item.force | default(omit) }}'
-    #fstype: '{{ item.fstype }}'
-    fstype: ext4
+    fstype: "{{ filesystem['fstype'] }}"
     #opts: '{{ item.opts | default(omit) }}'
     #resizefs: '{{ item.resizefs | default(omit) }}'
     #state: '{{ item.state | default(omit) }}'
@@ -60,16 +54,13 @@
     #boot: '{{ item.boot | default(omit) }}'
     #ump: '{{ item.dump | default(omit) }}'
     #fstab: '{{ item.fstab | default(omit) }}'
-    fstype: '{{ item.fstype }}'
-    fstype: ext4
+    fstype: "{{ mount['fstype'] }}"
     #opts: '{{ item.opts | default("defaults") }}'
     #passno: '{{ item.pass | default(omit) }}'
     #path: '{{ item.path }}'
-    path: /data/mongodb
-    #src: '{{ item.dev }}'
-    src: /dev/sdb1
-    #state: '{{ item.state | default("mounted") }}'
-    state: mounted
+    path: "{{ mount['path'] }}"
+    src: "{{ mount['src'] }}"
+    state: "{{ mount['state'] }}"
   #with_items: "{{ mount }}"
   become: true
   tags:
