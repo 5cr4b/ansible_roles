@@ -1,0 +1,39 @@
+--- 
+
+- name: Create New Folder to Store Data
+  ansible.builtin.file:
+    path: "{{ mount_point }}"
+    state: directory
+    owner: "{{ mongodb_user }}"
+    group: "{{ mongodb_group }}"
+  become: true
+  tags:
+  - install 
+  - mount
+  - folder
+
+
+- name: Delete Default Folder
+  ansible.builtin.file:
+    path: "{{ mongodb_default_folder }}"
+    state: absent
+  become: true
+  tags:
+  - install
+  - folder
+
+- name: Create Soft Link 
+  ansible.builtin.file:
+    src: "{{ mount_point }}"
+    dest: "{{ mongodb_default_folder }}"
+    state: link
+    owner: "{{ mongodb_user }}"
+    group: "{{ mongodb_group }}"
+  become: true
+  notify: "restart mongodb"
+  tags:
+  - install
+  - folder
+
+- name: restart mongodbs
+  ansible.builtin.meta: flush_handlers

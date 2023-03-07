@@ -4,7 +4,7 @@
   become: true
   vars:
     repli: true
-    parttion: true
+    partition: true
     mount_point: true
   roles:
     # Mounted disk first
@@ -14,4 +14,4 @@
     #- name: Install mongodb
     #  absible.builtin.inclue_role:
     - mongodb_install
-      
+        

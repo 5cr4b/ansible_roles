@@ -1,84 +1,17 @@
 ---
 # tasks file for mongodb_install
-
-- name: Import list file for Mongodb
-  template:
-    src: mongodb_repo.list.j2
-    dest: "{{ mongodb_key_store }}"
-    #owner: "{{ mongodb_user }}"
-    #group: "{{ mongodb_group }}"
+- name: Update Repo And Install Mongodb
+  ansible.builtin.include_tasks:
+    file: install_mongodb.yml
   tags:
   - install
-  - apt
 
-- name: Import Mongodb key
-  ansible.builtin.apt_key:
-    url: "{{ mongodb_repo }}"
-    state: present
-    # store keyfile
-    #file: "{{ mongodb_key_store }}"
-  become: true
-  tags:
-  - install
-  - apt
-
-- name: Update package
-  ansible.builtin.apt:
-    update_cache: yes
-    upgrade: yes
-    state: present
-  become: true
-  tags:
-  - install
-  - apt
-
-- name: Install mongodb-org
-  apt:
-    name: mongodb-org
-    state: present
-  become: true 
-  tags:
-  - apt
-  - install
-
-
-- name: Create New Folder to Store Data
-  ansible.builtin.file:
-    path: "{{ mount_point }}"
-    state: directory
-    owner: "{{ mongodb_user }}"
-    group: "{{ mongodb_group }}"
-  become: true
-  tags:
-  - install 
-  - mount
-  - folder
-
-
-- name: Delete Default Folder
-  ansible.builtin.file:
-    path: "{{ mongodb_default_folder }}"
-    state: absent
-  become: true
+- name: Change Mongodb Default Folder
+  ansible.builtin.include_tasks:
+    file: change_default_folder.yml
   tags:
   - install
   - folder
-
-- name: Create Soft Link 
-  ansible.builtin.file:
-    src: "{{ mount_point }}"
-    dest: "{{ mongodb_default_folder }}"
-    state: link
-    owner: "{{ mongodb_user }}"
-    group: "{{ mongodb_group }}"
-  become: true
-  notify: "restart mongodb"
-  tags:
-  - install
-  - folder
-
-- name: restart mongodbs
-  ansible.builtin.meta: flush_handlers
 
 # If reply Is True
 - name: Install dependencies
