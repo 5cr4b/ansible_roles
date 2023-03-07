@@ -15,8 +15,6 @@
   ansible.builtin.apt_key:
     url: "{{ mongodb_repo }}"
     state: present
-    # ignore SSL cert for target url
-    validate_certs: false
     # store keyfile
     #file: "{{ mongodb_key_store }}"
   become: true
@@ -56,26 +54,6 @@
   - mount
   - folder
 
-#- name: Restart Mongodb
-#  service: 
-#    name: mongod
-#    state: restarted
-#  become: true
-#  tags:
-#    - mongodb_restart
-
-#- name: Copy Default Folder
-#  ansible.builtin.copy:
-#    remote_src: true 
-#    src: "{{ mongodb_default_folder }}"
-#    dest: "{{ mount_point }}"
-#    backup: true
-#  register: _copy
-#  become: true
-#  tags:
-#  - install
-#  - mount
-#  - folder
 
 - name: Delete Default Folder
   ansible.builtin.file:
@@ -94,25 +72,19 @@
     owner: "{{ mongodb_user }}"
     group: "{{ mongodb_group }}"
   become: true
-  #notify: 
-  #  - Restart Mongodb
+  notify: "restart mongodb"
   tags:
   - install
   - folder
 
-- name: Restart Mongodb
-  service: 
-    name: mongod
-    state: restarted
-  become: true
-  tags:
-    - mongodb_restart
+- name: restart mongodbs
+  ansible.builtin.meta: flush_handlers
 
 # If reply Is True
 - name: Install dependencies
   ansible.builtin.include_tasks:
     file: install_dependencies.yml
-  when: repli
+  when: repli #and inventory_hostname in groups['master']
   tags:
   - replicaset
 

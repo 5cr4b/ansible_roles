@@ -7,24 +7,16 @@
     owner: "{{ mongodb_user }}"
     group: "{{ mongodb_group }}"
   become: true
-  #notify:
-  #  - Stop Mongodb
+  notify:
+    - "restart mongodb"
   when: repli
   tags:
   - replicaset
 
-- name: Restart Mongodb
-  service: 
-    name: mongod
-    state: restarted
-  become: true
-  tags:
-    - mongodb_restart
 
 # Install ansible galaxy first 
 # ansible-galaxy collection install community.mongodb
 - name: Init Replicaset
-  #shell: mongosh  < rsInit.j2
   community.mongodb.mongodb_replicaset:
     replica_set: "{{ replicaset_name }}"
     login_port: "{{ mongodb_port }}"

@@ -1,19 +1,21 @@
 ---
 # handlers file for mongodb_install
 
-- name: Stop Mongodb
-  service:
-    name: mongod
-    state: stoppped 
-  become: true
-  tags:
-    - mongodb_stop
+#- name: Stop Mongodb
+#  service:
+#    name: mongod
+#    state: stopped 
+#  become: true
+#  listen: "stop mongodb"
+#  tags:
+#    - mongodb_stop
 
 - name: Restart Mongodb
   service: 
     name: mongod
     state: restarted
   become: true
+  listen: "restart mongodb"
   tags:
     - mongodb_restart
 
